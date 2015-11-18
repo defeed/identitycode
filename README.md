@@ -1,4 +1,4 @@
-# Identitycode
+# IdentityCode
 
 ## Installation
 
