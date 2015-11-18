@@ -22,6 +22,8 @@ Or install it yourself as:
 > require 'identity_code'
 > code = IdentityCode::Isikukood.new('38312203720')
 > code.valid?
+# or
+> IdentityCode::Isikukood.valid?('38312203720')
 => true
 > code.sex
 => 'M'
@@ -29,6 +31,11 @@ Or install it yourself as:
 => '1983-12-20'
 > code.age
 => 31
+# Generate random valid identity code
+> IdentityCode::Isikukood.generate
+=> '37504163700'
+> IdentityCode::Isikukood.generate(sex: 'M', year: 1983, month: 12, day: 20)
+=> '38312209528'
 ```
 
 ## Development
