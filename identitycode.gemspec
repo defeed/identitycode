@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'identitycode/version'
+require 'identity_code/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "identitycode"
-  spec.version       = Identitycode::VERSION
+  spec.version       = IdentityCode::VERSION
   spec.authors       = ["Artem Pakk"]
   spec.email         = ["apakk@me.com"]
 
