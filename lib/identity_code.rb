@@ -58,6 +58,10 @@ module IdentityCode
       result += new(result).control_code.to_s
     end
 
+    def self.valid?(code)
+      new(code).valid?
+    end
+
     def initialize(code)
       @code = code.to_s
     end
@@ -86,7 +90,6 @@ module IdentityCode
       return unless valid?
       @code[0].to_i.odd? ? 'M' : 'F'
     end
-
 
     def control_code
       scales1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1]
