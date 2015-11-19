@@ -39,7 +39,7 @@ module IdentityCode
     def self.generate(opts = {})
       first_digit = 0
 
-      sex = opts[:sex] || rand.round == 0 ? 'M' : 'F'
+      sex = opts[:sex] || (rand.round == 0 ? 'M' : 'F')
       year = opts[:year] || rand(Date.today.year - 90..Date.today.year - 1)
       month = opts[:month] || rand(1..12)
       day = opts[:day] || rand(1..NUM_DAYS[month])
