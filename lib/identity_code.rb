@@ -2,7 +2,22 @@ require 'identity_code/version'
 require 'date'
 
 module IdentityCode
-  class Isikukood
+  NUM_DAYS = {
+    1 => 31,
+    2 => 28,
+    3 => 31,
+    4 => 30,
+    5 => 31,
+    6 => 30,
+    7 => 31,
+    8 => 31,
+    9 => 30,
+    10 => 31,
+    11 => 30,
+    12 => 31
+  }
+
+  class EE
     HOSPITALS = [
       '00', # Kuressaare Haigla (järjekorranumbrid 001 kuni 020)
       '01', # Tartu Ülikooli Naistekliinik, Tartumaa, Tartu (011...019)
@@ -20,21 +35,6 @@ module IdentityCode
       '70', # All other hospitals
       '95'  # Foreigners who are born in Estonia
     ]
-
-    NUM_DAYS = {
-      1 => 31,
-      2 => 28,
-      3 => 31,
-      4 => 30,
-      5 => 31,
-      6 => 30,
-      7 => 31,
-      8 => 31,
-      9 => 30,
-      10 => 31,
-      11 => 30,
-      12 => 31
-    }
 
     def self.generate(opts = {})
       first_digit = 0
@@ -121,6 +121,93 @@ module IdentityCode
       when 1..2 then 1800
       when 3..4 then 1900
       when 5..6 then 2000
+      else
+        2100
+      end
+    end
+  end
+
+  class LV
+    def initialize(code)
+      @code = code.to_s.gsub('-', '')
+    end
+
+    def self.generate(opts = {})
+      year = opts[:year] || rand(Date.today.year - 90..Date.today.year - 1)
+      year = rand(Date.today.year - 50..Date.today.year - 19) if opts[:safe_age]
+      month = opts[:month] || rand(1..12)
+      day = opts[:day] || rand(1..NUM_DAYS[month])
+
+      century_code = begin
+        case year
+        when 1800..1899 then 0
+        when 1900..1999 then 1
+        when 2000..2099 then 2
+        else
+          9
+        end
+      end.to_s
+
+      result = "%02d" % day
+      result += "%02d" % month
+      result += "%02d" % year.to_s[2..3].to_i
+      result += '-' if opts[:separator]
+      result += century_code
+      result += "%03d" % rand(0..999).to_s
+      result += new(result).control_code.to_s
+    end
+
+    def self.valid?(code)
+      new(code).valid?
+    end
+
+    def valid?
+      @code.length == 11 &&
+      @code[10].chr.to_i == control_code
+    end
+
+    def birth_date
+      return unless valid?
+      year = century + @code[4..5].to_i
+      month = @code[2..3].to_i
+      day = @code[0..1].to_i
+      return unless Date.valid_date?(year, month, day)
+      Date.new(year, month, day)
+    end
+
+    def age
+      return unless valid?
+      now = Time.now.utc.to_date
+      now.year - (birth_date.year + age_correction)
+    end
+
+    def control_code
+      array = @code.split('').map(&:to_i)
+      multipliers = [1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
+      hash = Hash[multipliers.zip(array)]
+
+      check = 0
+      hash.map do |k, v|
+        check += k * v
+      end
+
+      ((1 - check) % 11) % 10
+    end
+
+    private
+
+    def age_correction
+      now = Time.now.utc.to_date
+      return 0 if now.month > birth_date.month
+      return 0 if now.month == birth_date.month && now.day >= birth_date.day
+      1
+    end
+
+    def century
+      case @code[6].chr.to_i
+      when 0 then 1800
+      when 1 then 1900
+      when 2 then 2000
       else
         2100
       end
