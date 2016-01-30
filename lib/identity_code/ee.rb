@@ -23,7 +23,7 @@ module IdentityCode
     def self.generate(opts = {})
       first_digit = 0
 
-      sex = opts[:sex] || (rand.round == 0 ? 'M' : 'F')
+      sex = opts[:sex] || (rand.round == 0 ? :M : :F)
       year = opts[:year] || rand(Date.today.year - 90..Date.today.year - 1)
       year = rand(Date.today.year - 50..Date.today.year - 19) if opts[:safe_age]
       month = opts[:month] || rand(1..12)
@@ -32,7 +32,7 @@ module IdentityCode
       first_digit += 1 if (1800..1899).include?(year)
       first_digit += 3 if (1900..1999).include?(year)
       first_digit += 5 if year >= 2000
-      first_digit += 1 if sex == 'F'
+      first_digit += 1 if sex.upcase.to_sym == :F
 
       result = first_digit.to_s
       result += "%02d" % year.to_s[2..3].to_i
@@ -73,7 +73,7 @@ module IdentityCode
 
     def sex
       return unless valid?
-      @code[0].to_i.odd? ? 'M' : 'F'
+      @code[0].to_i.odd? ? :M : :F
     end
 
     def control_code
