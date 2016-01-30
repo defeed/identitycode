@@ -16,7 +16,19 @@ module IdentityCode
     10 => 31,
     11 => 30,
     12 => 31
-  }
+  }.freeze
+
+  SUPPORTED_COUNTRY_CODES = %i(ee lv).freeze
+
+  def self.generate(opts = {})
+    country_code = opts.delete(:country)
+    raise 'Country param is missing or invalid (ee or lv)' unless begin
+      country_code &&
+      SUPPORTED_COUNTRY_CODES.include?(country_code.downcase.to_sym)
+    end
+
+    Object.const_get("IdentityCode::#{country_code.upcase}").generate(opts)
+  end
 
   def self.age_correction(birth_date)
     now = Time.now.utc.to_date
