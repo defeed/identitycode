@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Artem Pakk']
   spec.email         = ['apakk@me.com']
 
-  spec.summary       = %q{Ruby gem to generate and validate Estonian identity codes}
-  spec.description   = %q{Ruby gem to generate and validate Estonian identity codes}
+  spec.summary       = %q{Ruby gem to generate and validate Estonian and Latvian identity codes}
+  spec.description   = %q{Ruby gem to generate and validate Estonian and Latvian identity codes}
   spec.homepage      = 'https://github.com/defeed/identitycode'
   spec.license       = "MIT"
 

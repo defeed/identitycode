@@ -18,12 +18,18 @@ Or install it yourself as:
 
 ## Usage
 
+This gem supports Estonian and Latvian identity codes. Just specify `EE` or `LV` class accordingly (`IdentityCode::EE` or `IdentityCode::LV`)
+
+*NB*: Latvian identity codes don't have sex support
+
 ```ruby
 > require 'identity_code'
-> code = IdentityCode::Isikukood.new('38312203720')
+> code = IdentityCode::EE.new('38312203720')
 > code.valid?
 # or
-> IdentityCode::Isikukood.valid?('38312203720')
+> IdentityCode::EE.valid?('38312203720')
+=> true
+> IdentityCode::LV.valid?('20128315289')
 => true
 > code.sex
 => 'M'
@@ -32,10 +38,12 @@ Or install it yourself as:
 > code.age
 => 31
 # Generate random valid identity code
-> IdentityCode::Isikukood.generate
+> IdentityCode::EE.generate
 => '37504163700'
-> IdentityCode::Isikukood.generate(sex: 'M', year: 1983, month: 12, day: 20)
+> IdentityCode::EE.generate(sex: 'M', year: 1983, month: 12, day: 20)
 => '38312209528'
+> IdentityCode::LV.generate(year: 1983, month: 12, day: 20, separator: true)
+=> '201283-15289'
 ```
 
 ## Development
