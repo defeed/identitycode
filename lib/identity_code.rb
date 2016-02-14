@@ -21,7 +21,7 @@ module IdentityCode
   SUPPORTED_COUNTRY_CODES = %i(ee lv).freeze
 
   def self.generate(opts = {})
-    country_code = opts.delete(:country)
+    country_code = opts[:country]
     raise 'Country param is missing or invalid (ee or lv)' unless begin
       country_code &&
       SUPPORTED_COUNTRY_CODES.include?(country_code.downcase.to_sym)
