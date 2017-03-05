@@ -26,18 +26,31 @@ module IdentityCode
       result += "%02d" % month
       result += "%02d" % year.to_s[2..3].to_i
       result += '-' if opts[:separator]
-      result += century_code
-      result += "%03d" % rand(0..999).to_s
-      result += new(result).control_code.to_s
+      result += century_code.to_s
+      result += "%03d" % rand(1..999).to_s
+      result += control_digit(result).to_s
     end
 
     def self.valid?(code)
       new(code).valid?
     end
 
+    def self.control_digit(base)
+      array = base.gsub('-', '').split('').map(&:to_i)
+      multipliers = [1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
+      hash = Hash[multipliers.zip(array)]
+
+      check = 0
+      hash.map do |k, v|
+        check += k * v
+      end
+
+      ((1 - check) % 11) % 10
+    end
+
     def valid?
       @code.length == 11 &&
-      @code[10].chr.to_i == control_code
+      @code[10].chr.to_i == self.class.control_digit(@code)
     end
 
     def birth_date
@@ -53,19 +66,6 @@ module IdentityCode
       return unless valid?
       now = Time.now.utc.to_date
       now.year - (birth_date.year + IdentityCode.age_correction(birth_date))
-    end
-
-    def control_code
-      array = @code.split('').map(&:to_i)
-      multipliers = [1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
-      hash = Hash[multipliers.zip(array)]
-
-      check = 0
-      hash.map do |k, v|
-        check += k * v
-      end
-
-      ((1 - check) % 11) % 10
     end
 
     private

@@ -25,11 +25,21 @@ module IdentityCode
       result += "%02d" % day
       result += "%03d" % rand(1..999)
       result += sex_digit.to_s
-      result += new(result).control_code.to_s
+      result += control_digit(result).to_s
     end
 
     def self.valid?(code)
       new(code).valid?
+    end
+
+    def self.control_digit(base)
+      multipliers = [9, 7, 3, 1, 9, 7, 3, 1, 9, 7]
+      id_ary = base.split(//).map(&:to_i)
+      sum = 0
+
+      (0...multipliers.count).each { |i| sum += id_ary[i] * multipliers[i] }
+
+      sum % 10
     end
 
     def initialize(code)
@@ -38,7 +48,7 @@ module IdentityCode
 
     def valid?
       @code.length == 11 &&
-      @code[10].chr.to_i == control_code
+      @code[10].chr.to_i == self.class.control_digit(@code)
     end
 
     def birth_date
@@ -68,16 +78,6 @@ module IdentityCode
     def sex
       return unless valid?
       @code[9].to_i.odd? ? :M : :F
-    end
-
-    def control_code
-      multipliers = [9, 7, 3, 1, 9, 7, 3, 1, 9, 7]
-      id_ary = @code.split(//).map(&:to_i)
-      sum = 0
-
-      (0...multipliers.count).each { |i| sum += id_ary[i] * multipliers[i] }
-
-      sum % 10
     end
 
     private

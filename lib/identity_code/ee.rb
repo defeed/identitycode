@@ -40,11 +40,26 @@ module IdentityCode
       result += "%02d" % day
       result += HOSPITALS[(rand * HOSPITALS.size - 1).round]
       result += rand(0..9).to_s
-      result += new(result).control_code.to_s
+      result += control_digit(result).to_s
     end
 
     def self.valid?(code)
       new(code).valid?
+    end
+
+    def self.control_digit(base)
+      scales1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1]
+      checknum = scales1.each_with_index.map do |scale, i|
+        base[i].chr.to_i * scale
+      end.inject(0, :+) % 11
+      return checknum unless checknum == 10
+
+      scales2 = [3, 4, 5, 6, 7, 8, 9, 1, 2, 3]
+      checknum = scales2.each_with_index.map do |scale, i|
+        base[i].chr.to_i * scale
+      end.inject(0, :+) % 11
+
+      checknum == 10 ? 0 : checknum
     end
 
     def initialize(code)
@@ -53,7 +68,7 @@ module IdentityCode
 
     def valid?
       @code.length == 11 &&
-      @code[10].chr.to_i == control_code
+      @code[10].chr.to_i == self.class.control_digit(@code)
     end
 
     def birth_date
@@ -74,21 +89,6 @@ module IdentityCode
     def sex
       return unless valid?
       @code[0].to_i.odd? ? :M : :F
-    end
-
-    def control_code
-      scales1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1]
-      checknum = scales1.each_with_index.map do |scale, i|
-        @code[i].chr.to_i * scale
-      end.inject(0, :+) % 11
-      return checknum unless checknum == 10
-
-      scales2 = [3, 4, 5, 6, 7, 8, 9, 1, 2, 3]
-      checknum = scales2.each_with_index.map do |scale, i|
-        @code[i].chr.to_i * scale
-      end.inject(0, :+) % 11
-
-      checknum == 10 ? 0 : checknum
     end
 
     private

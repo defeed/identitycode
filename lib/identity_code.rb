@@ -31,6 +31,17 @@ module IdentityCode
     Object.const_get("IdentityCode::#{country_code.upcase}").generate(opts)
   end
 
+  def self.validate(opts = {})
+    country_code = opts.delete(:country)
+    raise 'Country param is missing or invalid (ee | lv | pl)' unless begin
+      country_code &&
+      SUPPORTED_COUNTRY_CODES.include?(country_code.downcase.to_sym)
+    end
+
+    code = opts.delete(:code)
+    Object.const_get("IdentityCode::#{country_code.upcase}").new(code)
+  end
+
   def self.valid?(opts = {})
     country_code = opts.delete(:country)
     raise 'Country param is missing or invalid (ee | lv | pl)' unless begin
