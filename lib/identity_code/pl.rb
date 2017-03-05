@@ -5,7 +5,7 @@ module IdentityCode
     def self.generate(opts = {})
       sex = opts[:sex] || (rand.round == 0 ? :M : :F)
       year = opts[:year] || rand(Date.today.year - 90..Date.today.year - 1)
-      year = rand(Date.today.year - 50..Date.today.year - 19) if opts[:safe_age]
+      year = rand(Date.today.year - 50..Date.today.year - 21) if opts[:safe_age]
       month = opts[:month] || rand(1..12)
       calc_month = begin
         offset = case year.to_s[0..1]

@@ -8,7 +8,7 @@ module IdentityCode
 
     def self.generate(opts = {})
       year = opts[:year] || rand(Date.today.year - 90..Date.today.year - 1)
-      year = rand(Date.today.year - 50..Date.today.year - 19) if opts[:safe_age]
+      year = rand(Date.today.year - 50..Date.today.year - 21) if opts[:safe_age]
       month = opts[:month] || rand(1..12)
       day = opts[:day] || rand(1..NUM_DAYS[month])
 
