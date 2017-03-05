@@ -68,6 +68,10 @@ module IdentityCode
       now.year - (birth_date.year + IdentityCode.age_correction(birth_date))
     end
 
+    def sex
+      nil
+    end
+
     private
 
     def century
