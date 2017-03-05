@@ -1,28 +1,29 @@
 require 'identity_code/version'
 require 'identity_code/ee'
 require 'identity_code/lv'
+require 'identity_code/pl'
 
 module IdentityCode
   NUM_DAYS = {
-    1 => 31,
-    2 => 28,
-    3 => 31,
-    4 => 30,
-    5 => 31,
-    6 => 30,
-    7 => 31,
-    8 => 31,
-    9 => 30,
+    1  => 31,
+    2  => 28,
+    3  => 31,
+    4  => 30,
+    5  => 31,
+    6  => 30,
+    7  => 31,
+    8  => 31,
+    9  => 30,
     10 => 31,
     11 => 30,
     12 => 31
   }.freeze
 
-  SUPPORTED_COUNTRY_CODES = %i(ee lv).freeze
+  SUPPORTED_COUNTRY_CODES = %i(ee lv pl).freeze
 
   def self.generate(opts = {})
     country_code = opts[:country]
-    raise 'Country param is missing or invalid (ee or lv)' unless begin
+    raise 'Country param is missing or invalid (ee | lv | pl)' unless begin
       country_code &&
       SUPPORTED_COUNTRY_CODES.include?(country_code.downcase.to_sym)
     end
@@ -32,7 +33,7 @@ module IdentityCode
 
   def self.valid?(opts = {})
     country_code = opts.delete(:country)
-    raise 'Country param is missing or invalid (ee or lv)' unless begin
+    raise 'Country param is missing or invalid (ee | lv | pl)' unless begin
       country_code &&
       SUPPORTED_COUNTRY_CODES.include?(country_code.downcase.to_sym)
     end

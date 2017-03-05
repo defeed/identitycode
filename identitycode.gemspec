@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Artem Pakk']
   spec.email         = ['apakk@me.com']
 
-  spec.summary       = %q{Ruby gem to generate and validate Estonian and Latvian identity codes}
-  spec.description   = %q{Ruby gem to generate and validate Estonian and Latvian identity codes}
+  spec.summary       = %q{Ruby gem to generate and validate Estonian, Latvian, and Polish identity codes}
+  spec.description   = %q{Ruby gem to generate and validate Estonian, Latvian, and Polish identity codes}
   spec.homepage      = 'https://github.com/defeed/identitycode'
   spec.license       = "MIT"
 
@@ -19,6 +19,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler', '~> 1.10'
+  spec.add_development_dependency 'bundler', '~> 1.11'
   spec.add_development_dependency 'rake', "~> 10.0"
 end

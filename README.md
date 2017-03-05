@@ -31,6 +31,8 @@ This gem supports Estonian and Latvian identity codes. Just specify `EE` or `LV`
 => true
 > IdentityCode::LV.valid?('20128315289')
 => true
+> IdentityCode.valid?(country: :lv, code: '20128315289')
+=> true
 > code.sex
 => 'M'
 > code.birth_date.to_s
@@ -38,6 +40,8 @@ This gem supports Estonian and Latvian identity codes. Just specify `EE` or `LV`
 > code.age
 => 31
 # Generate random valid identity code
+> IdentityCode.generate(country: :ee)
+=> '37504163700'
 > IdentityCode::EE.generate
 => '37504163700'
 > IdentityCode::EE.generate(sex: 'M', year: 1983, month: 12, day: 20)
